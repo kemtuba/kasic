@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Light that listens. A vertical feed of light works, one piece at a time, with sound.">
+<title>Light that listens — feed prototype</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%239BE7FF'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Instrument+Sans:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark}
+html,body{height:100%}
+body{margin:0;position:fixed;inset:0;overflow:hidden;background:#000;color:#F2F0EA;font-family:'Instrument Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#9BE7FF}a:hover{color:#fff}
+#light{position:absolute;inset:0;width:100%;height:100%;display:block}
+.feed{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior-y:contain}
+.feed::-webkit-scrollbar{display:none}
+.feed:focus-visible{outline:2px solid #9BE7FF;outline-offset:-2px}
+.piece{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always}
+.caption{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:20px 20px calc(28px + env(safe-area-inset-bottom)) 20px;background:rgba(0,0,0,.72);display:flex;flex-direction:column;gap:8px}
+.meta{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#C9C6BF}
+.title{margin:0;font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:42px;line-height:.95;text-transform:uppercase;color:#F2F0EA}
+.line{margin:0;font-size:15px;line-height:1.4;color:#E4E1DA}
+.sound{display:flex;align-items:center;gap:8px;margin-top:4px;color:#9BE7FF}
+.sound svg{flex:none}
+.ticker{flex:1;min-width:0;overflow:hidden;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px}
+.tick{display:inline-block;animation:tick 14s linear infinite}
+.tick span{padding-right:48px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.top{position:absolute;left:0;top:0;right:0;box-sizing:border-box;height:calc(64px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 20px 0 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.6);pointer-events:none}
+.top h1{margin:0;font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:22px;letter-spacing:.04em;text-transform:uppercase;color:#F2F0EA}
+.counter{font-family:'JetBrains Mono',monospace;font-size:12px;color:#C9C6BF}
+.controls{position:absolute;right:16px;bottom:calc(280px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.round{width:52px;height:52px;padding:0;border-radius:26px;border:1px solid rgba(242,240,234,.5);background:rgba(0,0,0,.6);color:#F2F0EA;display:flex;align-items:center;justify-content:center;cursor:pointer;font:inherit}
+.prompt{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);min-height:48px;padding:0 24px;border-radius:24px;border:1px solid rgba(242,240,234,.8);background:rgba(0,0,0,.6);color:#F2F0EA;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.round:focus-visible,.prompt:focus-visible{outline:2px solid #9BE7FF;outline-offset:2px}
+[hidden]{display:none!important}
+@media (min-width:768px){
+.caption{right:auto;max-width:640px;padding:28px 32px calc(36px + env(safe-area-inset-bottom)) 32px}
+.title{font-size:clamp(42px,5.5vw,80px)}
+.line{font-size:17px}
+.top{padding-left:32px;padding-right:32px}
+.controls{right:24px}
+}
+@media (prefers-reduced-motion:reduce){.tick{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="light" aria-hidden="true"></canvas>
+
+<div id="feed" class="feed" tabindex="0" aria-label="Works. Scroll or swipe up for the next piece.">
+
+<section class="piece" aria-label="[Parliament projection]" data-mode="facade" data-hue="38" data-notes="55,82.41" data-cut="520" data-bpm="60">
+<div class="caption">
+<div class="meta">Budapest · [Year]</div>
+<h2 class="title">[Parliament projection]</h2>
+<p class="line">Full screen, sound on, one piece at a time.</p>
+<div class="sound">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+<div class="ticker"><span class="tick"><span>Sound: [Composer] / [Track]</span><span>Sound: [Composer] / [Track]</span></span></div>
+</div>
+</div>
+</section>
+
+<section class="piece" aria-label="[Second piece]" data-mode="rings" data-hue="190" data-notes="65.41,98" data-cut="900" data-bpm="92">
+<div class="caption">
+<div class="meta">[Place] · [Year]</div>
+<h2 class="title">[Second piece]</h2>
+<p class="line">Swipe up for the next piece, the way a feed works.</p>
+<div class="sound">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+<div class="ticker"><span class="tick"><span>Sound: [Composer] / [Track]</span><span>Sound: [Composer] / [Track]</span></span></div>
+</div>
+</div>
+</section>
+
+<section class="piece" aria-label="[Third piece]" data-mode="beams" data-hue="300" data-notes="49,73.42" data-cut="700" data-bpm="120">
+<div class="caption">
+<div class="meta">[Place] · [Year]</div>
+<h2 class="title">[Third piece]</h2>
+<p class="line">Every piece credits its sound, like a track in a feed.</p>
+<div class="sound">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+<div class="ticker"><span class="tick"><span>Sound: [Composer] / [Track]</span><span>Sound: [Composer] / [Track]</span></span></div>
+</div>
+</div>
+</section>
+
+<section class="piece" aria-label="[Studio work]" data-mode="dust" data-hue="150" data-notes="73.42,110" data-cut="1200" data-bpm="76">
+<div class="caption">
+<div class="meta">[Medium] · [Year]</div>
+<h2 class="title">[Studio work]</h2>
+<p class="line">Drawings and smaller pieces live in the same stream.</p>
+<div class="sound">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+<div class="ticker"><span class="tick"><span>Sound: [Composer] / [Track]</span><span>Sound: [Composer] / [Track]</span></span></div>
+</div>
+</div>
+</section>
+
+</div>
+
+<header class="top">
+<h1>[Artist name]</h1>
+<div class="counter" id="counter" aria-live="polite">01 / 04</div>
+</header>
+
+<div class="controls">
+<button type="button" class="round" id="sound" aria-pressed="false" aria-label="Sound">
+<svg id="icon-on" hidden width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 5a10 10 0 0 1 0 14"></path></svg>
+<svg id="icon-off" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="m22 9-6 6"></path><path d="m16 9 6 6"></path></svg>
+</button>
+<button type="button" class="round" id="next" aria-label="Next piece">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+</button>
+</div>
+
+<button type="button" class="prompt" id="prompt">Tap for sound</button>
+
+<script>
+(function () {
+  'use strict';
+  var feed = document.getElementById('feed');
+  var canvas = document.getElementById('light');
+  var ctx = canvas.getContext('2d');
+  var sections = Array.prototype.slice.call(feed.querySelectorAll('.piece'));
+  var pieces = sections.map(function (el) {
+    return {
+      mode: el.getAttribute('data-mode'),
+      hue: Number(el.getAttribute('data-hue')),
+      notes: el.getAttribute('data-notes').split(',').map(Number),
+      cut: Number(el.getAttribute('data-cut')),
+      bpm: Number(el.getAttribute('data-bpm'))
+    };
+  });
+  var total = pieces.length;
+  var counter = document.getElementById('counter');
+  var soundBtn = document.getElementById('sound');
+  var iconOn = document.getElementById('icon-on');
+  var iconOff = document.getElementById('icon-off');
+  var nextBtn = document.getElementById('next');
+  var prompt = document.getElementById('prompt');
+
+  var motion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var reduce = !!(motion && motion.matches);
+  if (motion && motion.addEventListener) motion.addEventListener('change', function (e) { reduce = e.matches; });
+
+  var i = 0, soundOn = false, live = false, ac = null, n = null, buf = null, timer = 0, pts = null;
+  var W = 1, H = 1, dpr = 1;
+
+  function resize() {
+    W = feed.clientWidth || window.innerWidth;
+    H = feed.clientHeight || window.innerHeight;
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    pts = null;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function pad(k) { return (k < 10 ? '0' : '') + k; }
+  function show(k) {
+    i = k;
+    counter.textContent = pad(k + 1) + ' / ' + pad(total);
+  }
+
+  feed.addEventListener('scroll', function () {
+    var h = feed.clientHeight || 1;
+    var k = Math.round(feed.scrollTop / h);
+    if (k !== i && k >= 0 && k < total) { show(k); voice(k); }
+  }, { passive: true });
+
+  nextBtn.addEventListener('click', function () {
+    feed.scrollTo({ top: ((i + 1) % total) * feed.clientHeight, behavior: reduce ? 'auto' : 'smooth' });
+  });
+
+  function setSound(on) {
+    soundOn = on;
+    soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    iconOn.hidden = !on;
+    iconOff.hidden = on;
+    prompt.hidden = true;
+  }
+  function toggleSound() {
+    if (soundOn) { stopAudio(); setSound(false); }
+    else { startAudio(); setSound(true); }
+  }
+  soundBtn.addEventListener('click', toggleSound);
+  prompt.addEventListener('click', toggleSound);
+
+  function startAudio() {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (!ac) {
+      ac = new AC();
+      var master = ac.createGain();
+      master.gain.value = 0;
+      var an = ac.createAnalyser();
+      an.fftSize = 256;
+      master.connect(an);
+      an.connect(ac.destination);
+      var filt = ac.createBiquadFilter();
+      filt.type = 'lowpass';
+      filt.Q.value = 5;
+      filt.connect(master);
+      var padGain = ac.createGain();
+      padGain.gain.value = 0.1;
+      padGain.connect(filt);
+      var o1 = ac.createOscillator();
+      o1.type = 'sawtooth';
+      o1.detune.value = 7;
+      o1.connect(padGain);
+      var o2 = ac.createOscillator();
+      o2.type = 'triangle';
+      o2.connect(padGain);
+      var lfo = ac.createOscillator();
+      lfo.frequency.value = 0.12;
+      var depth = ac.createGain();
+      depth.gain.value = 300;
+      lfo.connect(depth);
+      depth.connect(filt.frequency);
+      var kick = ac.createOscillator();
+      var kg = ac.createGain();
+      kg.gain.value = 0;
+      kick.connect(kg);
+      kg.connect(master);
+      [o1, o2, lfo, kick].forEach(function (o) { o.start(); });
+      n = { master: master, an: an, filt: filt, o1: o1, o2: o2, kick: kick, kg: kg };
+      buf = new Uint8Array(an.frequencyBinCount);
+    }
+    ac.resume();
+    live = true;
+    voice(i);
+    n.master.gain.setTargetAtTime(0.3, ac.currentTime, 0.3);
+  }
+
+  function stopAudio() {
+    live = false;
+    clearInterval(timer);
+    if (ac) n.master.gain.setTargetAtTime(0, ac.currentTime, 0.15);
+  }
+
+  function voice(k) {
+    if (!ac || !live) return;
+    var p = pieces[k], t = ac.currentTime;
+    n.o1.frequency.setTargetAtTime(p.notes[0], t, 0.4);
+    n.o2.frequency.setTargetAtTime(p.notes[1], t, 0.4);
+    n.filt.frequency.setTargetAtTime(p.cut, t, 0.5);
+    clearInterval(timer);
+    timer = setInterval(beat, 60000 / p.bpm);
+  }
+
+  function beat() {
+    if (!ac) return;
+    var t = ac.currentTime;
+    n.kick.frequency.cancelScheduledValues(t);
+    n.kick.frequency.setValueAtTime(120, t);
+    n.kick.frequency.exponentialRampToValueAtTime(42, t + 0.25);
+    n.kg.gain.cancelScheduledValues(t);
+    n.kg.gain.setValueAtTime(0.0001, t);
+    n.kg.gain.exponentialRampToValueAtTime(0.6, t + 0.01);
+    n.kg.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+  }
+
+  function avg(a, b) { var s = 0; for (var k = a; k < b; k++) s += buf[k]; return s / (b - a) / 255; }
+  function energy(t) {
+    if (live && n) {
+      n.an.getByteFrequencyData(buf);
+      return { low: avg(1, 6), mid: avg(6, 24), high: avg(24, 64) };
+    }
+    var p = pieces[i], ph = (t * p.bpm / 60) % 1;
+    return { low: 0.25 + 0.5 * Math.pow(1 - ph, 4), mid: 0.3 + 0.1 * Math.sin(t * 0.7), high: 0.2 };
+  }
+
+  function draw(sec) {
+    var p = pieces[i], hue = p.hue;
+    var t = sec * (reduce ? 0.2 : 1), e = energy(t);
+    var s = Math.min(W / 390, H / 844);
+    var x = ctx;
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    x.globalCompositeOperation = 'source-over';
+    x.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    x.fillRect(0, 0, W, H);
+    x.globalCompositeOperation = 'lighter';
+    if (p.mode === 'facade') {
+      var cols = Math.max(11, Math.round(W / (390 / 11 * s)));
+      var cw = W / cols, base = H * 0.56, f = 11 / cols;
+      for (var k = 0; k < cols; k++) {
+        var cx = cw * (k + 0.5), w = cw * 0.52, h = (130 + 36 * Math.sin(k * 1.7)) * s;
+        var a = 0.1 + 0.55 * Math.max(0, Math.sin(t * 1.4 - k * 0.5 * f)) * (0.5 + e.low);
+        x.fillStyle = 'hsla(' + (hue + k * 3 * f) + ', 90%, 60%, ' + a + ')';
+        x.beginPath();
+        x.moveTo(cx - w / 2, base);
+        x.lineTo(cx - w / 2, base - h);
+        x.quadraticCurveTo(cx, base - h - w * 1.2, cx + w / 2, base - h);
+        x.lineTo(cx + w / 2, base);
+        x.closePath();
+        x.fill();
+      }
+      var sx = ((t * 70 * s) % (W + 240 * s)) - 120 * s;
+      x.fillStyle = 'hsla(' + hue + ', 100%, 70%, ' + (0.06 + e.mid * 0.25) + ')';
+      x.fillRect(sx, base - 260 * s, (30 + e.high * 90) * s, 260 * s);
+      for (var r = 0; r < 14; r++) {
+        x.fillStyle = 'hsla(' + (hue + 15) + ', 80%, 55%, ' + (0.04 + e.low * 0.1) + ')';
+        x.fillRect(0, base + (18 + r * 13) * s, W, (1.5 + Math.abs(Math.sin(t * 2.4 + r)) * 2) * s);
+      }
+    } else if (p.mode === 'rings') {
+      var rcx = W / 2, rcy = H * 0.4, sr = Math.min(W, H) / 390;
+      x.lineWidth = (1 + e.low * 5) * sr;
+      for (var q = 0; q < 9; q++) {
+        var rad = ((t * 40 + q * 34) % 306) + e.low * 24;
+        x.strokeStyle = 'hsla(' + (hue + q * 8) + ', 90%, 65%, ' + (Math.max(0, 1 - rad / 330) * (0.25 + e.mid)) + ')';
+        x.beginPath();
+        x.arc(rcx, rcy, rad * sr, 0, Math.PI * 2);
+        x.stroke();
+      }
+    } else if (p.mode === 'beams') {
+      var ox = W / 2, oy = H + 10 * s, len = Math.sqrt(W * W + H * H) * 1.1;
+      for (var b = 0; b < 14; b++) {
+        var ang = -Math.PI / 2 + Math.sin(t * 0.6 + b * 0.8) * 0.7, wd = 0.015 + e.low * 0.05;
+        x.fillStyle = 'hsla(' + (hue + b * 6) + ', 90%, 65%, ' + (0.05 + e.mid * 0.15) + ')';
+        x.beginPath();
+        x.moveTo(ox, oy);
+        x.lineTo(ox + Math.cos(ang - wd) * len, oy + Math.sin(ang - wd) * len);
+        x.lineTo(ox + Math.cos(ang + wd) * len, oy + Math.sin(ang + wd) * len);
+        x.closePath();
+        x.fill();
+      }
+    } else {
+      if (!pts) {
+        var count = Math.min(360, Math.round(90 * (W * H) / (390 * 844)));
+        pts = [];
+        for (var m = 0; m < count; m++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: Math.random() - 0.5, vy: Math.random() - 0.5 });
+      }
+      var sp = (reduce ? 0.1 : 0.5) * (1 + e.low * 3) * s, th = 4200 * s * s;
+      for (var u = 0; u < pts.length; u++) { var pt = pts[u]; pt.x = (pt.x + pt.vx * sp + W) % W; pt.y = (pt.y + pt.vy * sp + H) % H; }
+      x.lineWidth = 0.6 * s;
+      for (var a1 = 0; a1 < pts.length; a1++) {
+        for (var b1 = a1 + 1; b1 < pts.length; b1++) {
+          var P = pts[a1], Q = pts[b1], dx = P.x - Q.x, dy = P.y - Q.y, d = dx * dx + dy * dy;
+          if (d < th) {
+            x.strokeStyle = 'hsla(' + hue + ', 80%, 65%, ' + ((1 - d / th) * (0.12 + e.mid * 0.4)) + ')';
+            x.beginPath();
+            x.moveTo(P.x, P.y);
+            x.lineTo(Q.x, Q.y);
+            x.stroke();
+          }
+        }
+      }
+      x.fillStyle = 'hsla(' + (hue + 30) + ', 90%, 75%, ' + (0.5 + e.high * 0.5) + ')';
+      for (var v = 0; v < pts.length; v++) { x.beginPath(); x.arc(pts[v].x, pts[v].y, (1 + e.low * 2.5) * s, 0, Math.PI * 2); x.fill(); }
+    }
+  }
+
+  function loop(ms) { draw(ms / 1000); window.requestAnimationFrame(loop); }
+  window.requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
